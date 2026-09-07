@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+
+# Logs
+*.log
+
+# Temp/build artifacts
+.codex-finalizer/
+.saarthi-ppt-build/
+.saarthi-ppt-reference/
+output/
+
+# SQLite database files
+*.db
+*.sqlite
+*.sqlite3

@@ -1,7 +1,12 @@
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import apiRouter from './routes/api.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -14,6 +19,15 @@ app.use(morgan('dev'));
 // Mount API routes
 app.use('/api', apiRouter);
 
+// --- Production: Serve Vite-built frontend static files ---
+const distPath = path.join(__dirname, '..', 'dist');
+app.use(express.static(distPath));
+
+// SPA fallback: any non-API route serves index.html
+app.get('*', (req, res) => {
+  res.sendFile(path.join(distPath, 'index.html'));
+});
+
 // Global Error Handler
 app.use((err, req, res, next) => {
   console.error('[SAARTHI Server Error]', err);
@@ -25,8 +39,9 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(`===================================================`);
-  console.log(`🛡️  SAARTHI National Government Credit Gateway API`);
-  console.log(`📡 Server running on http://localhost:${PORT}`);
-  console.log(`📜 Health endpoint: http://localhost:${PORT}/api/health`);
+  console.log(`🛡️  SAARTHI National Government Credit Gateway`);
+  console.log(`📡 Server running on port ${PORT}`);
+  console.log(`🌐 Frontend served from ${distPath}`);
+  console.log(`📜 API health: /api/health`);
   console.log(`===================================================`);
 });

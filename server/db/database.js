@@ -1,4 +1,4 @@
-import Database from 'better-sqlite3';
+import initSqlJs from 'sql.js';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
@@ -13,13 +13,21 @@ if (!fs.existsSync(dbDir)) {
 }
 
 const dbPath = path.join(dbDir, 'saarthi.db');
-const db = new Database(dbPath);
 
-// Enable WAL mode for high concurrency
-db.pragma('journal_mode = WAL');
+// Initialize sql.js (pure JS/WASM — no native C++ addon, works on Render/Vercel/anywhere)
+const SQL = await initSqlJs();
+
+// Load existing database file or create new one
+let sqlDb;
+if (fs.existsSync(dbPath)) {
+  const fileBuffer = fs.readFileSync(dbPath);
+  sqlDb = new SQL.Database(fileBuffer);
+} else {
+  sqlDb = new SQL.Database();
+}
 
 // Initialize schema
-db.exec(`
+sqlDb.run(`
   CREATE TABLE IF NOT EXISTS passports (
     ref_id TEXT PRIMARY KEY,
     timestamp TEXT NOT NULL,
@@ -40,8 +48,8 @@ db.exec(`
     partner_name TEXT NOT NULL,
     branch TEXT,
     status TEXT NOT NULL DEFAULT 'received',
-    documents_verified TEXT, -- JSON array
-    metadata TEXT -- JSON object
+    documents_verified TEXT,
+    metadata TEXT
   );
 
   CREATE TABLE IF NOT EXISTS scheme_evaluations (
@@ -68,6 +76,89 @@ db.exec(`
   );
 `);
 
-console.log(`[Database] SQLite connected and initialized at ${dbPath}`);
+// Auto-save to disk periodically and on changes
+function saveToDisk() {
+  try {
+    const data = sqlDb.export();
+    const buffer = Buffer.from(data);
+    fs.writeFileSync(dbPath, buffer);
+  } catch (err) {
+    console.error('[DB Save Error]:', err.message);
+  }
+}
+
+// Save every 30 seconds
+setInterval(saveToDisk, 30000);
+
+// Graceful shutdown save
+process.on('SIGTERM', () => { saveToDisk(); process.exit(0); });
+process.on('SIGINT', () => { saveToDisk(); process.exit(0); });
+
+/**
+ * Compatibility wrapper to match better-sqlite3 API surface.
+ * The API routes use db.prepare(sql) which returns { run(), get(), all() }.
+ * This wrapper translates sql.js calls to that interface.
+ */
+const db = {
+  prepare(sql) {
+    return {
+      // Run with named params (object like { refId: '...', ... }) or positional params
+      run(...args) {
+        if (args.length === 1 && typeof args[0] === 'object' && !Array.isArray(args[0])) {
+          // Named parameters: convert @name to $name for sql.js
+          const namedSql = sql.replace(/@(\w+)/g, '$$$1');
+          const params = {};
+          for (const [key, value] of Object.entries(args[0])) {
+            params[`$${key}`] = value;
+          }
+          sqlDb.run(namedSql, params);
+        } else {
+          // Positional parameters
+          sqlDb.run(sql, args);
+        }
+        saveToDisk();
+        return { changes: sqlDb.getRowsModified() };
+      },
+
+      // Get single row
+      get(...args) {
+        const stmt = sqlDb.prepare(sql);
+        if (args.length > 0) {
+          stmt.bind(args);
+        }
+        if (stmt.step()) {
+          const columns = stmt.getColumnNames();
+          const values = stmt.get();
+          stmt.free();
+          const row = {};
+          columns.forEach((col, i) => { row[col] = values[i]; });
+          return row;
+        }
+        stmt.free();
+        return undefined;
+      },
+
+      // Get all rows
+      all(...args) {
+        const results = [];
+        const stmt = sqlDb.prepare(sql);
+        if (args.length > 0) {
+          stmt.bind(args);
+        }
+        while (stmt.step()) {
+          const columns = stmt.getColumnNames();
+          const values = stmt.get();
+          const row = {};
+          columns.forEach((col, i) => { row[col] = values[i]; });
+          results.push(row);
+        }
+        stmt.free();
+        return results;
+      }
+    };
+  }
+};
+
+console.log(`[Database] sql.js (pure WASM) initialized at ${dbPath}`);
 
 export { db };

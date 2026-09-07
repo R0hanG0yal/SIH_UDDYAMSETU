@@ -23,8 +23,8 @@ app.use('/api', apiRouter);
 const distPath = path.join(__dirname, '..', 'dist');
 app.use(express.static(distPath));
 
-// SPA fallback: any non-API route serves index.html
-app.get('*', (req, res) => {
+// SPA fallback: any non-API route serves index.html (Express 5 syntax)
+app.get('{*path}', (req, res) => {
   res.sendFile(path.join(distPath, 'index.html'));
 });
 

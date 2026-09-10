@@ -118,7 +118,7 @@ export function LoanFitPassport({ profile, scheme, matchResult, partner, documen
     },
     hi: {
       passportTitle: "आधिकारिक लोन फिट पासपोर्ट",
-      tagline: "सुरक्षित प्री-रूटिंग व पात्रता प्रमाण पत्र • भारत सरकार राष्ट्रीय ऋण व्यवस्था",
+      tagline: "सुरक्षित प्री-रूटिंग व पात्रता प्रमाण पत्र • SIH 2026 प्रोटोटाइप",
       refNumber: "रेफरल टोकन संख्या",
       issuedFor: "लाभार्थी का नाम",
       schemeAssigned: "अनुशंसित राष्ट्रीय योजना",

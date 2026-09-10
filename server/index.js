@@ -39,7 +39,7 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(`===================================================`);
-  console.log(`🛡️  SAARTHI National Government Credit Gateway`);
+  console.log(`🛡️  उद्यमसेतु (UdyamSetu) — AI Funding Navigator`);
   console.log(`📡 Server running on port ${PORT}`);
   console.log(`🌐 Frontend served from ${distPath}`);
   console.log(`📜 API health: /api/health`);

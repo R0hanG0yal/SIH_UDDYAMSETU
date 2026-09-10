@@ -1,4 +1,4 @@
-// Comprehensive Catalog of Government of India Enterprise Schemes (National & Ministry Level)
+// Comprehensive Catalog of National Enterprise Schemes (Ministry Level)
 // Sources: Ministry of MSME, Ministry of Finance, MoHUA, MoSJE, MoFPI, MoFAHD, SIDBI, KVIC
 
 export const NATIONAL_SCHEMES = [
@@ -27,7 +27,7 @@ export const NATIONAL_SCHEMES = [
     moratoriumMonths: 6,
     repaymentTenureYears: 7,
     repaymentCadence: "quarterly",
-    summary: "Up to 35% non-repayable direct cash grant (margin money) from the Government of India for setting up new manufacturing or service micro-enterprises.",
+    summary: "Up to 35% non-repayable direct cash grant (margin money) for setting up new manufacturing or service micro-enterprises.",
     summaryHindi: "विनिर्माण (₹50 लाख तक) व सेवा इकाइयों (₹20 लाख तक) हेतु सरकार द्वारा 15% से 35% तक का सीधा गैर-वापसी नकद अनुदान।",
     requiredDocuments: [
       { id: "aadhaar", label: "Aadhaar Card", mandatory: true },
@@ -480,6 +480,224 @@ export const NATIONAL_SCHEMES = [
     bridgeSteps: [
       "Apply through the centralized Vidya Lakshmi Portal (vidyalakshmi.co.in).",
       "Ensure college is NAAC or NBA accredited / AICTE approved."
+    ]
+  },
+
+  // ====================================================================
+  // MoSJE / NSFDC SCHEMES — Targeted at SC/ST Communities
+  // ====================================================================
+
+  // NSFDC Term Loan Scheme
+  {
+    id: "MOSJE_NSFDC_TERM_LOAN",
+    code: "NSFDC-TL-01",
+    name: "NSFDC Term Loan Scheme for SC Entrepreneurs",
+    nameHindi: "NSFDC अनुसूचित जाति उद्यम ऋण योजना",
+    ministry: "Ministry of Social Justice & Empowerment (MoSJE) / NSFDC",
+    portalUrl: "https://nsfdc.nic.in",
+    category: "Concessional Term Loan for SC/ST",
+    purpose: "business",
+    sectors: ["Manufacturing", "Services", "Agriculture", "Transport", "Small Business"],
+    minCost: 50000,
+    maxCost: 3000000, // ₹30 Lakh
+    maxFundingPercent: 90,
+    minOwnContributionPercent: 10,
+    interestRatePercent: 6.0, // concessional rate
+    subsidyMatrix: null, // No capital subsidy — concessional interest instead
+    moratoriumMonths: 6,
+    repaymentTenureYears: 10,
+    repaymentCadence: "quarterly",
+    summary: "Concessional loan up to ₹30 Lakh at 6% p.a. exclusively for SC/ST entrepreneurs through NSFDC-authorized State Channelising Agencies (SCAs). No collateral for loans up to ₹5 Lakh.",
+    summaryHindi: "NSFDC द्वारा अनुसूचित जाति/जनजाति उद्यमियों के लिए ₹30 लाख तक का रियायती ऋण 6% ब्याज दर पर। ₹5 लाख तक बिना गारंटी।",
+    requiredDocuments: [
+      { id: "aadhaar", label: "Aadhaar Card", mandatory: true },
+      { id: "caste_cert", label: "SC/ST Caste Certificate (Issued by SDM/Tehsildar)", mandatory: true },
+      { id: "income_cert", label: "Income Certificate (≤ ₹3 Lakh annual)", mandatory: true },
+      { id: "dpr", label: "Detailed Project Report (DPR)", mandatory: true },
+      { id: "bank_passbook", label: "Bank Account Passbook", mandatory: true }
+    ],
+    eligibilityRules: {
+      minAge: 18,
+      maxAge: 55,
+      socialCategory: ["SC", "ST"],
+      annualIncomeCeiling: 300000, // ₹3 Lakh (doubled BPL)
+      onlyNewGreenfield: false
+    },
+    bridgeSteps: [
+      "Obtain SC/ST caste certificate from your SDM/Tehsildar office if not already available.",
+      "Get income certificate from SDM/Tehsildar — must show annual family income ≤ ₹3,00,000.",
+      "Contact your State Channelising Agency (SCA) — they process NSFDC loans at the state level.",
+      "Prepare a Detailed Project Report (DPR) describing your business plan, costs, and expected revenue."
+    ]
+  },
+
+  // NSFDC Micro Credit Finance Scheme
+  {
+    id: "MOSJE_NSFDC_MICRO_CREDIT",
+    code: "NSFDC-MCF-02",
+    name: "NSFDC Micro Credit Finance for SC Women SHGs",
+    nameHindi: "NSFDC अनुसूचित जाति महिला स्वयं सहायता समूह सूक्ष्म ऋण",
+    ministry: "Ministry of Social Justice & Empowerment (MoSJE) / NSFDC",
+    portalUrl: "https://nsfdc.nic.in",
+    category: "Micro Credit for SC Women",
+    purpose: "business",
+    sectors: ["Services", "Manufacturing", "Food Processing", "Handicrafts", "Retail"],
+    minCost: 5000,
+    maxCost: 150000, // ₹1.5 Lakh per member
+    maxFundingPercent: 95,
+    minOwnContributionPercent: 5,
+    interestRatePercent: 5.0, // highly concessional
+    subsidyMatrix: null,
+    moratoriumMonths: 3,
+    repaymentTenureYears: 3,
+    repaymentCadence: "monthly",
+    summary: "Micro credit up to ₹1.5 Lakh per SC woman through Self-Help Groups at 5% p.a. Targeted at women from scheduled caste communities for starting micro enterprises.",
+    summaryHindi: "स्वयं सहायता समूहों के माध्यम से SC महिलाओं को ₹1.5 लाख तक का सूक्ष्म ऋण 5% ब्याज दर पर। सूक्ष्म उद्यम शुरू करने हेतु।",
+    requiredDocuments: [
+      { id: "aadhaar", label: "Aadhaar Card", mandatory: true },
+      { id: "caste_cert", label: "SC Caste Certificate", mandatory: true },
+      { id: "income_cert", label: "Income Certificate (≤ ₹3 Lakh)", mandatory: true },
+      { id: "shg_cert", label: "SHG Registration / Bank Linkage Proof", mandatory: true }
+    ],
+    eligibilityRules: {
+      minAge: 18,
+      socialCategory: ["SC"],
+      genderRestriction: "female",
+      annualIncomeCeiling: 300000,
+      requiresSHG: true
+    },
+    bridgeSteps: [
+      "Join or form a Self-Help Group (SHG) in your area — NRLM/State Rural Livelihood Mission can help.",
+      "Get the SHG bank-linked through nearest bank branch or CSC kiosk.",
+      "Apply through SCA with SHG registration proof and caste certificate."
+    ]
+  },
+
+  // NSFDC Education Loan
+  {
+    id: "MOSJE_NSFDC_EDUCATION",
+    code: "NSFDC-EDU-03",
+    name: "NSFDC Education Loan for SC Students",
+    nameHindi: "NSFDC अनुसूचित जाति शिक्षा ऋण",
+    ministry: "Ministry of Social Justice & Empowerment (MoSJE) / NSFDC",
+    portalUrl: "https://nsfdc.nic.in",
+    category: "Concessional Education Loan for SC",
+    purpose: "education",
+    sectors: ["Education"],
+    minCost: 50000,
+    maxCost: 2000000, // ₹20 Lakh
+    maxFundingPercent: 90,
+    minOwnContributionPercent: 10,
+    interestRatePercent: 4.0, // lowest rate
+    subsidyMatrix: null,
+    moratoriumMonths: 12, // 1 year after course completion
+    repaymentTenureYears: 5,
+    repaymentCadence: "monthly",
+    summary: "Education loan up to ₹20 Lakh at 4% p.a. for SC students pursuing professional/technical courses. Moratorium until 1 year after course completion.",
+    summaryHindi: "SC छात्रों के लिए व्यावसायिक/तकनीकी पाठ्यक्रमों हेतु ₹20 लाख तक का शिक्षा ऋण 4% ब्याज दर पर। कोर्स पूर्ण होने के 1 वर्ष बाद तक मोरेटोरियम।",
+    requiredDocuments: [
+      { id: "aadhaar", label: "Aadhaar Card", mandatory: true },
+      { id: "caste_cert", label: "SC Caste Certificate", mandatory: true },
+      { id: "income_cert", label: "Income Certificate (≤ ₹3 Lakh)", mandatory: true },
+      { id: "admission_letter", label: "Admission/Enrollment Letter", mandatory: true }
+    ],
+    eligibilityRules: {
+      minAge: 17,
+      maxAge: 35,
+      socialCategory: ["SC"],
+      annualIncomeCeiling: 300000,
+      purposeRestriction: "education"
+    },
+    bridgeSteps: [
+      "Secure admission in a recognized institution (AICTE/UGC approved).",
+      "Obtain caste and income certificates from SDM/Tehsildar.",
+      "Apply through State Channelising Agency (SCA) with admission letter."
+    ]
+  },
+
+  // Venture Capital Fund for Scheduled Castes (VCF-SC)
+  {
+    id: "MOSJE_VCF_SC",
+    code: "VCF-SC-04",
+    name: "Venture Capital Fund for Scheduled Castes (VCF-SC)",
+    nameHindi: "अनुसूचित जाति उद्यम पूंजी कोष (VCF-SC)",
+    ministry: "Ministry of Social Justice & Empowerment (MoSJE) / IFCI",
+    portalUrl: "https://vcfsc.ifciltd.com",
+    category: "Equity-Like Venture Capital for SC Entrepreneurs",
+    purpose: "business",
+    sectors: ["Manufacturing", "Services", "Technology", "Agro-processing"],
+    minCost: 500000,
+    maxCost: 3000000, // ₹30 Lakh (equity-like)
+    maxFundingPercent: 75,
+    minOwnContributionPercent: 25,
+    interestRatePercent: 0, // equity-like, no interest — revenue sharing
+    subsidyMatrix: null,
+    moratoriumMonths: 24, // 2 years
+    repaymentTenureYears: 7,
+    repaymentCadence: "quarterly",
+    summary: "Equity-like funding up to ₹30 Lakh for SC entrepreneurs starting manufacturing or service enterprises. Managed by IFCI. No interest — returns via revenue sharing over 7 years.",
+    summaryHindi: "SC उद्यमियों के लिए विनिर्माण/सेवा उद्यम शुरू करने हेतु ₹30 लाख तक की इक्विटी-जैसी पूंजी। IFCI द्वारा प्रबंधित। ब्याज नहीं — राजस्व साझेदारी।",
+    requiredDocuments: [
+      { id: "aadhaar", label: "Aadhaar Card", mandatory: true },
+      { id: "caste_cert", label: "SC Caste Certificate", mandatory: true },
+      { id: "income_cert", label: "Income Certificate", mandatory: true },
+      { id: "dpr", label: "Detailed Project Report (DPR)", mandatory: true },
+      { id: "business_plan", label: "Business Plan with Revenue Projections", mandatory: true }
+    ],
+    eligibilityRules: {
+      minAge: 18,
+      maxAge: 50,
+      socialCategory: ["SC"],
+      annualIncomeCeiling: 500000,
+      minProjectCost: 500000
+    },
+    bridgeSteps: [
+      "Prepare a detailed business plan with 3-5 year revenue projections.",
+      "Apply through IFCI's VCF-SC portal: vcfsc.ifciltd.com.",
+      "Attend the selection committee interview if shortlisted."
+    ]
+  },
+
+  // PM-DAKSH (Pradhan Mantri Dakshta Aur Kushalta Sampann Hitgrahi)
+  {
+    id: "MOSJE_PM_DAKSH",
+    code: "PM-DAKSH-05",
+    name: "PM-DAKSH: Free Skill Training for SC/ST/OBC/Safai Karamcharis",
+    nameHindi: "पीएम-दक्ष: SC/ST/OBC/सफाई कर्मचारियों हेतु मुफ्त कौशल प्रशिक्षण",
+    ministry: "Ministry of Social Justice & Empowerment (MoSJE)",
+    portalUrl: "https://pmdaksh.dosje.gov.in",
+    category: "Free Skill Training + Stipend",
+    purpose: "skill_training",
+    sectors: ["All Sectors — Skill Development"],
+    minCost: 0,
+    maxCost: 0, // fully free
+    maxFundingPercent: 100,
+    minOwnContributionPercent: 0,
+    interestRatePercent: 0,
+    subsidyMatrix: {
+      stipendPerMonth: 3000, // ₹3000/month during training
+      toolkitGrant: true
+    },
+    moratoriumMonths: 0,
+    repaymentTenureYears: 0,
+    repaymentCadence: null,
+    summary: "100% free skill training (short-term, long-term, up-skilling, re-skilling, entrepreneurship development) with ₹3,000/month stipend for SC/ST/OBC/Safai Karamcharis. No repayment — it's a grant.",
+    summaryHindi: "SC/ST/OBC/सफाई कर्मचारियों के लिए 100% मुफ्त कौशल प्रशिक्षण + ₹3,000/माह छात्रवृत्ति। कोई ऋण वापसी नहीं — पूर्णतः अनुदान।",
+    requiredDocuments: [
+      { id: "aadhaar", label: "Aadhaar Card", mandatory: true },
+      { id: "caste_cert", label: "SC/ST/OBC Caste Certificate", mandatory: true },
+      { id: "income_cert", label: "Income Certificate", mandatory: false }
+    ],
+    eligibilityRules: {
+      minAge: 18,
+      maxAge: 45,
+      socialCategory: ["SC", "ST", "OBC"],
+      annualIncomeCeiling: 300000
+    },
+    bridgeSteps: [
+      "Register on PM-DAKSH portal: pmdaksh.dosje.gov.in.",
+      "Select a training program matching your trade from available slots.",
+      "Attend training and receive ₹3,000/month stipend during the program."
     ]
   }
 ];

@@ -18,6 +18,7 @@ export function evaluateNationalSchemes(profile) {
   const isMinority = socialCategory === "MINORITY" || Boolean(profile.isMinority);
   const isSpecialCategory = isFemale || isSC || isST || isOBC || isMinority || Boolean(profile.isRural);
   const isRural = Boolean(profile.isRural !== undefined ? profile.isRural : true);
+  const isPWD = Boolean(profile.isPWD);
 
   // Sector identification
   const isFoodProcessing = categoryName.includes("food") || categoryName.includes("bakery") || categoryName.includes("spice") || categoryName.includes("flour") || categoryName.includes("chakk") || categoryName.includes("dairy") || categoryName.includes("oil") || categoryName.includes("pickle") || categoryName.includes("masala");
@@ -159,6 +160,97 @@ export function evaluateNationalSchemes(profile) {
         failedRules.push("Family income exceeds ₹6 Lakh ceiling.");
       } else {
         passedRules.push("Family income within ₹6,00,000 ceiling.");
+      }
+    }
+
+    // ================================================================
+    // MoSJE / NSFDC SCHEME-SPECIFIC RULES
+    // ================================================================
+
+    // NSFDC Term Loan — SC/ST only, income ≤ ₹3 Lakh
+    if (scheme.id === "MOSJE_NSFDC_TERM_LOAN") {
+      if (!isSC && !isST) {
+        isFit = false;
+        failedRules.push("NSFDC Term Loan is exclusively for Scheduled Caste (SC) and Scheduled Tribe (ST) entrepreneurs.");
+      } else {
+        passedRules.push("SC/ST social category verified — eligible for NSFDC concessional financing at 6% p.a.");
+      }
+      if (income > 300000) {
+        isFit = false;
+        failedRules.push(`Annual family income (₹${income.toLocaleString('en-IN')}) exceeds NSFDC ceiling of ₹3,00,000.`);
+      } else {
+        passedRules.push("Annual family income within NSFDC ₹3,00,000 ceiling.");
+      }
+      if (isPWD) passedRules.push("PWD applicant — eligible for priority processing and additional interest rebate.");
+    }
+
+    // NSFDC Micro Credit — SC women via SHGs only
+    if (scheme.id === "MOSJE_NSFDC_MICRO_CREDIT") {
+      if (!isSC) {
+        isFit = false;
+        failedRules.push("NSFDC Micro Credit is exclusively for Scheduled Caste (SC) women through Self-Help Groups.");
+      } else {
+        passedRules.push("SC social category verified for NSFDC Micro Credit.");
+      }
+      if (!isFemale) {
+        isFit = false;
+        failedRules.push("This scheme is specifically for women entrepreneurs operating through SHGs.");
+      } else {
+        passedRules.push("Female beneficiary — eligible for SC Women SHG Micro Credit at 5% p.a.");
+      }
+      if (income > 300000) {
+        isFit = false;
+        failedRules.push(`Family income (₹${income.toLocaleString('en-IN')}) exceeds ₹3,00,000 ceiling.`);
+      } else {
+        passedRules.push("Family income within ₹3,00,000 threshold.");
+      }
+    }
+
+    // NSFDC Education Loan — SC only, education purpose
+    if (scheme.id === "MOSJE_NSFDC_EDUCATION") {
+      if (!isSC) {
+        isFit = false;
+        failedRules.push("NSFDC Education Loan is exclusively for SC students.");
+      } else {
+        passedRules.push("SC category verified — eligible for education loan at 4% p.a.");
+      }
+      if (purpose !== "education") {
+        isFit = false;
+        failedRules.push("This loan is for education/professional course purposes only, not business.");
+      } else {
+        passedRules.push("Purpose aligns — education/professional course.");
+      }
+      if (income > 300000) {
+        isFit = false;
+        failedRules.push(`Family income exceeds ₹3,00,000 ceiling.`);
+      } else {
+        passedRules.push("Family income within NSFDC threshold.");
+      }
+    }
+
+    // VCF-SC — SC entrepreneurs, larger projects
+    if (scheme.id === "MOSJE_VCF_SC") {
+      if (!isSC) {
+        isFit = false;
+        failedRules.push("VCF-SC is exclusively for SC entrepreneurs setting up manufacturing or service enterprises.");
+      } else {
+        passedRules.push("SC category verified — eligible for equity-like venture capital (0% interest, revenue sharing).");
+      }
+      if (cost < 500000) {
+        isFit = false;
+        failedRules.push(`Project cost (₹${cost.toLocaleString('en-IN')}) is below VCF-SC minimum of ₹5,00,000.`);
+      } else {
+        passedRules.push(`Project scale (₹${cost.toLocaleString('en-IN')}) qualifies for VCF-SC venture funding.`);
+      }
+    }
+
+    // PM-DAKSH — SC/ST/OBC, skill training (always matches for those categories)
+    if (scheme.id === "MOSJE_PM_DAKSH") {
+      if (!isSC && !isST && !isOBC) {
+        isFit = false;
+        failedRules.push("PM-DAKSH is designated for SC/ST/OBC communities and Safai Karamcharis.");
+      } else {
+        passedRules.push("SC/ST/OBC category verified — eligible for 100% free skill training + ₹3,000/month stipend.");
       }
     }
 

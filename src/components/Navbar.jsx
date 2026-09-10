@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Compass, ShieldCheck, QrCode, Sliders, HelpCircle, MapPin, Settings, X, Accessibility, Monitor, Globe } from 'lucide-react';
+import { Compass, ShieldCheck, QrCode, Sliders, HelpCircle, MapPin, Settings, X, Accessibility, Monitor, Globe, Bot, Sparkles } from 'lucide-react';
 
-export function Navbar({ activeTab, setActiveTab, lang = 'en', setLang, isCscMode, setIsCscMode, isHighContrast, setIsHighContrast }) {
+export function Navbar({ activeTab, setActiveTab, lang = 'en', setLang, isCscMode, setIsCscMode, isHighContrast, setIsHighContrast, onOpenAiSahayak }) {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const settingsRef = useRef(null);
 
@@ -18,21 +18,29 @@ export function Navbar({ activeTab, setActiveTab, lang = 'en', setLang, isCscMod
 
   const navItems = [
     { id: 'journey', label: lang === 'hi' ? 'यात्रा' : 'Journey', fullLabel: lang === 'hi' ? 'नागरिक यात्रा' : 'Citizen Journey', icon: Compass },
+    { id: 'whatif', label: lang === 'hi' ? 'व्हाट-इफ' : 'What-If Lab', fullLabel: lang === 'hi' ? 'व्हाट-इफ लैब' : 'What-If Funding Lab', icon: Sliders },
     { id: 'pulse', label: lang === 'hi' ? 'पार्टनर' : 'Partners', fullLabel: lang === 'hi' ? 'पार्टनर पल्स' : 'Partner Pulse', icon: MapPin },
     { id: 'officer', label: lang === 'hi' ? 'QR स्कैन' : 'Officer', fullLabel: lang === 'hi' ? 'अधिकारी QR' : 'Officer Scan', icon: QrCode },
-    { id: 'admin', label: lang === 'hi' ? 'नीति' : 'Policy', fullLabel: lang === 'hi' ? 'नीति लैब' : 'Policy Studio', icon: Sliders },
+    { id: 'admin', label: lang === 'hi' ? 'एडमिन' : 'Admin & AI', fullLabel: lang === 'hi' ? 'नीति लैब व बेंचमार्क' : 'Policy Studio & Benchmark', icon: Settings },
     { id: 'faq', label: lang === 'hi' ? 'सहायता' : 'FAQ', fullLabel: lang === 'hi' ? 'सहायता' : 'FAQ & Portals', icon: HelpCircle }
   ];
 
   return (
     <header className="navbar-slim">
       <div className="navbar-inner">
-        {/* Brand — compact */}
+        {/* Brand — UdyamSetu */}
         <div className="navbar-brand" onClick={() => setActiveTab('journey')}>
-          <div className="navbar-logo-mark">
+          <div className="navbar-logo-mark" style={{ background: 'linear-gradient(135deg, #10b981, #0d9488)' }}>
             <Compass size={20} color="#ffffff" strokeWidth={2.5} />
           </div>
-          <span className="navbar-wordmark">SAARTHI</span>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <span className="navbar-wordmark" style={{ letterSpacing: '-0.02em', fontWeight: 900 }}>
+              {lang === 'hi' ? 'उद्यमसेतु' : 'UdyamSetu'}
+            </span>
+            <span style={{ fontSize: '0.62rem', color: '#38bdf8', fontWeight: 600, letterSpacing: '0.04em', textTransform: 'uppercase', marginTop: '-2px' }}>
+              AI Funding Navigator
+            </span>
+          </div>
         </div>
 
         {/* Tab Navigation — compact pill bar */}
@@ -53,6 +61,24 @@ export function Navbar({ activeTab, setActiveTab, lang = 'en', setLang, isCscMod
               </button>
             );
           })}
+
+          {/* AI Sahayak Agent Button in Tab Bar */}
+          <button
+            type="button"
+            onClick={onOpenAiSahayak}
+            id="nav-tab-ai-sahayak"
+            className="navbar-tab-btn ai-agent-highlight"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255, 111, 30, 0.18), rgba(234, 88, 12, 0.28))',
+              border: '1.5px solid #ff6f1e',
+              color: '#ff6f1e',
+              fontWeight: '800'
+            }}
+            title="SAARTHI Autonomous AI Caseworker"
+          >
+            <Bot size={16} color="#ff6f1e" />
+            <span className="navbar-tab-label">{lang === 'hi' ? 'AI सहायक (Agent)' : 'AI Sahayak (Agent)'}</span>
+          </button>
         </nav>
 
         {/* Right: Language toggle (always visible) + Settings gear */}

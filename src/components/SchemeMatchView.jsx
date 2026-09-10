@@ -1,11 +1,28 @@
-import React, { useState } from 'react';
-import { CheckCircle2, XCircle, AlertCircle, Sparkles, ShieldCheck, ArrowRight, ExternalLink, Gift, Clock, Wrench, FileCheck2, ChevronDown, ChevronUp } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { CheckCircle2, XCircle, AlertCircle, Sparkles, ShieldCheck, ArrowRight, ExternalLink, Gift, Clock, Wrench, FileCheck2, ChevronDown, ChevronUp, Layers, FileText, Bot, X } from 'lucide-react';
+import { fetchStackedSubsidies } from '../services/api';
+import { CitationFootnote } from './CitationFootnote';
+import { FeedbackWidget } from './FeedbackWidget';
 
 export function SchemeMatchView({ matchEvaluation, profile, onSelectSchemeAndProceed, lang = 'en' }) {
   const [selectedSchemeId, setSelectedSchemeId] = useState(null);
   const [expandedDetailsMap, setExpandedDetailsMap] = useState({});
   const [showIneligibleSection, setShowIneligibleSection] = useState(false);
   const [expandedBridgeId, setExpandedBridgeId] = useState(null);
+  const [stackedData, setStackedData] = useState(null);
+  const [showDossierModal, setShowDossierModal] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    fetchStackedSubsidies(profile || {})
+      .then(data => {
+        if (isMounted && data.status === 'SUCCESS') {
+          setStackedData(data);
+        }
+      })
+      .catch(err => console.warn('[AI Subsidy Stacking Error]:', err));
+    return () => { isMounted = false; };
+  }, [profile]);
 
   const evaluation = matchEvaluation || {
     matchedSchemes: [],
@@ -26,8 +43,8 @@ export function SchemeMatchView({ matchEvaluation, profile, onSelectSchemeAndPro
 
   const t = {
     en: {
-      matchTitle: "Government Schemes You Directly Qualify For",
-      matchSubtitle: "Evaluated across active Government of India ministries (MoMSME, MoF, MoHUA, MoSJE). Universal citizen access based on project viability.",
+      matchTitle: "Schemes You Qualify For — AI Eligibility Analysis",
+      matchSubtitle: "Evaluated against published guidelines from MoSJE/NSFDC, MoMSME, MoF, and MoHUA. Higher subsidies for SC/ST/OBC/Minority/PWD applicants.",
       subsidyBadge: "Direct Capital Cash Grant",
       toolBadge: "Free Tool Kit Grant",
       whyMatched: "Policy Rules Passed:",
@@ -39,13 +56,13 @@ export function SchemeMatchView({ matchEvaluation, profile, onSelectSchemeAndPro
       hideDetailsBtn: "Hide Details"
     },
     hi: {
-      matchTitle: "सरकारी योजनाएं जिनके लिए आप सीधे पात्र हैं",
-      matchSubtitle: "भारत सरकार के विभिन्न मंत्रालयों (MSME, वित्त, आवास) की चालू योजनाओं में पात्रता का पारदर्शी विश्लेषण।",
-      subsidyBadge: "सीधा गैर-वापसी सरकारी अनुदान",
+      matchTitle: "योजनाएं जिनके लिए आप पात्र हैं — AI पात्रता विश्लेषण",
+      matchSubtitle: "MoSJE/NSFDC, MoMSME, वित्त मंत्रालय व आवास मंत्रालय की प्रकाशित नियमावलियों के आधार पर। SC/ST/OBC/अल्पसंख्यक/PWD हेतु विशेष सब्सिडी।",
+      subsidyBadge: "सीधा गैर-वापसी अनुदान",
       toolBadge: "मुफ्त टूलकिट अनुदान",
       whyMatched: "सत्यापित पात्रता नियम:",
       bridgeTitle: "पात्रता विस्तार: बड़ी सब्सिडी व योजनाएं कैसे प्राप्त करें?",
-      bridgeSubtitle: "सरल, निःशुल्क सरकारी कदम जिनके द्वारा आप 35% तक का सरकारी अनुदान व 5% ब्याज दर प्राप्त कर सकते हैं।",
+      bridgeSubtitle: "सरल, निःशुल्क कदम जिनके द्वारा आप 35% तक का अनुदान व 5% ब्याज दर प्राप्त कर सकते हैं।",
       ineligibleTitle: "अन्य योजनाएं जो वर्तमान प्रोजेक्ट में उपयुक्त नहीं हैं",
       proceedBtn: "किस्त योजना व मोरेटोरियम देखें:",
       showDetailsBtn: "विस्तृत नीति नियम देखें",
@@ -79,6 +96,230 @@ export function SchemeMatchView({ matchEvaluation, profile, onSelectSchemeAndPro
         </div>
       </div>
 
+      {/* AI SUBSIDY STACKING & BENEFIT MAXIMIZER CARD */}
+      {stackedData && stackedData.stackedBenefits && (
+        <div 
+          className="ai-subsidy-card animate-fade-in"
+          style={{
+            marginBottom: '2rem',
+            padding: '1.5rem',
+            borderRadius: '16px',
+            background: 'linear-gradient(135deg, #0b192c 0%, #164e63 100%)',
+            color: '#ffffff',
+            boxShadow: '0 12px 30px rgba(11, 25, 44, 0.25)',
+            border: '1px solid rgba(56, 189, 248, 0.3)'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1.25rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+              <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'linear-gradient(135deg, #ff6f1e, #ea580c)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Layers size={20} color="#ffffff" />
+              </div>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: '900', color: '#ffffff' }}>
+                    {lang === 'hi' ? 'AI सब्सिडी स्टैकिंग व लाभ अधिकतमकरण' : 'AI Subsidy Stacking & Benefit Maximizer'}
+                  </h3>
+                  <span style={{ fontSize: '0.65rem', padding: '0.15rem 0.5rem', borderRadius: '999px', background: 'rgba(16, 185, 129, 0.25)', color: '#34d399', border: '1px solid rgba(16, 185, 129, 0.5)', fontWeight: '800' }}>
+                    AUTONOMOUS BENEFIT STACK
+                  </span>
+                </div>
+                <p style={{ margin: 0, fontSize: '0.78rem', color: '#94a3b8' }}>
+                  {lang === 'hi' ? 'PMEGP, NSFDC व PM-विश्वकर्मा के संयुक्त अनुदान का स्वचालित मिलान' : 'Multi-scheme grant stacking: PMEGP Capital Subsidy + PM Vishwakarma Toolkit'}
+                </p>
+              </div>
+            </div>
+
+            <button 
+              type="button"
+              onClick={() => setShowDossierModal(true)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.45rem',
+                padding: '0.55rem 1rem',
+                borderRadius: '10px',
+                background: '#ff6f1e',
+                color: '#ffffff',
+                border: 'none',
+                fontWeight: '700',
+                fontSize: '0.84rem',
+                cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(255, 111, 30, 0.35)'
+              }}
+            >
+              <FileText size={16} />
+              <span>{lang === 'hi' ? 'बैंक प्रबंधक अनुशंसा पत्र (Dossier)' : 'Bank Manager Justification Dossier'}</span>
+            </button>
+          </div>
+
+          {/* 3 Metric Grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem', marginBottom: '1.25rem' }}>
+            <div style={{ padding: '1rem', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+              <div style={{ fontSize: '0.75rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: '700' }}>
+                {lang === 'hi' ? 'सीधा गैर-वापसी नकद अनुदान' : 'Non-Repayable Cash Grant'}
+              </div>
+              <div style={{ fontSize: '1.5rem', fontWeight: '900', color: '#34d399', marginTop: '0.2rem' }}>
+                ₹{stackedData.stackedBenefits.totalDirectGrant.toLocaleString('en-IN')}
+              </div>
+              <div style={{ fontSize: '0.72rem', color: '#cbd5e1', marginTop: '0.25rem' }}>
+                {lang === 'hi' ? 'ऋण खाते में सीधी सरकारी सब्सिडी जमा' : 'Direct Margin Money Deposit'}
+              </div>
+            </div>
+
+            <div style={{ padding: '1rem', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+              <div style={{ fontSize: '0.75rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: '700' }}>
+                {lang === 'hi' ? 'वार्षिक ब्याज बचत' : 'Annual Interest Saved'}
+              </div>
+              <div style={{ fontSize: '1.5rem', fontWeight: '900', color: '#38bdf8', marginTop: '0.2rem' }}>
+                ₹{stackedData.stackedBenefits.annualInterestSaved.toLocaleString('en-IN')}<span style={{ fontSize: '0.85rem', fontWeight: '600' }}>/yr</span>
+              </div>
+              <div style={{ fontSize: '0.72rem', color: '#cbd5e1', marginTop: '0.25rem' }}>
+                {stackedData.stackedBenefits.effectiveInterestRate}% {lang === 'hi' ? 'रियायती दर (बाजार दर 12.5% के विरुद्ध)' : 'Concessional vs 12.5% Commercial'}
+              </div>
+            </div>
+
+            <div style={{ padding: '1rem', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+              <div style={{ fontSize: '0.75rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: '700' }}>
+                {lang === 'hi' ? '5-वर्षीय संचयी लाभ' : '5-Year Cumulative Advantage'}
+              </div>
+              <div style={{ fontSize: '1.5rem', fontWeight: '900', color: '#f59e0b', marginTop: '0.2rem' }}>
+                ₹{stackedData.stackedBenefits.netBenefitOver5Years.toLocaleString('en-IN')}
+              </div>
+              <div style={{ fontSize: '0.72rem', color: '#cbd5e1', marginTop: '0.25rem' }}>
+                {lang === 'hi' ? 'अनुदान + ब्याज अंतर का कुल फायदा' : 'Grant + Interest differential total'}
+              </div>
+            </div>
+          </div>
+
+          {/* Stacking Breakdown Steps */}
+          {stackedData.stackedBenefits.stackSteps && stackedData.stackedBenefits.stackSteps.length > 0 && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', borderTop: '1px solid rgba(255, 255, 255, 0.1)', paddingTop: '0.85rem' }}>
+              <span style={{ fontSize: '0.74rem', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase' }}>
+                {lang === 'hi' ? 'स्टैकिंग घटक (Stacked Components):' : 'Stacked Components:'}
+              </span>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.65rem' }}>
+                {stackedData.stackedBenefits.stackSteps.map((step, idx) => (
+                  <div key={idx} style={{ background: 'rgba(255, 255, 255, 0.08)', borderRadius: '8px', padding: '0.4rem 0.75rem', fontSize: '0.78rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span style={{ color: '#34d399', fontWeight: '800' }}>+₹{step.amount.toLocaleString('en-IN')}</span>
+                    <span style={{ color: '#f8fafc' }}>{step.scheme}</span>
+                    <span style={{ color: '#94a3b8', fontSize: '0.72rem' }}>({step.type})</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* BANKER JUSTIFICATION DOSSIER MODAL */}
+      {showDossierModal && stackedData && stackedData.bankerDossier && (
+        <div 
+          className="ai-modal-overlay animate-fade-in"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 99999,
+            background: 'rgba(15, 23, 42, 0.8)',
+            backdropFilter: 'blur(8px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1.5rem'
+          }}
+        >
+          <div 
+            style={{
+              width: '100%',
+              maxWidth: '680px',
+              maxHeight: '85vh',
+              overflowY: 'auto',
+              background: '#ffffff',
+              borderRadius: '16px',
+              padding: '2rem',
+              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.3)',
+              border: '1.5px solid #cbd5e1',
+              color: '#0f172a'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1.5px solid #e2e8f0', paddingBottom: '1rem', marginBottom: '1.25rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                <ShieldCheck size={26} color="#0f393b" />
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: '900', color: '#0f393b' }}>
+                    Official Banker Recommendation Dossier
+                  </h3>
+                  <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                    Prepared autonomously by SAARTHI AI for Lead District Manager / Bank Branch
+                  </span>
+                </div>
+              </div>
+              <button 
+                type="button" 
+                onClick={() => setShowDossierModal(false)}
+                style={{ background: '#f1f5f9', border: 'none', borderRadius: '8px', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+              >
+                <X size={18} color="#475569" />
+              </button>
+            </div>
+
+            <div style={{ fontSize: '0.88rem', lineHeight: '1.6', color: '#334155' }}>
+              <p style={{ margin: '0 0 0.5rem', fontWeight: '700', color: '#64748b', fontSize: '0.8rem' }}>
+                Date: {stackedData.bankerDossier.date}
+              </p>
+              <p style={{ margin: '0 0 0.75rem', fontWeight: '700' }}>
+                {stackedData.bankerDossier.salutation}
+              </p>
+              <div style={{ padding: '0.65rem 0.85rem', background: '#f8fafc', borderRadius: '8px', borderLeft: '4px solid #ff6f1e', marginBottom: '1rem', fontWeight: '700', color: '#0f393b' }}>
+                Subject: {stackedData.bankerDossier.subject}
+              </div>
+
+              <p style={{ marginBottom: '0.85rem' }}>
+                {stackedData.bankerDossier.applicantSummary}
+              </p>
+
+              <p style={{ marginBottom: '0.85rem' }}>
+                {stackedData.bankerDossier.statutoryBacking}
+              </p>
+
+              <div style={{ margin: '1rem 0', padding: '0.85rem', background: '#f0fdf4', borderRadius: '10px', border: '1px solid #bbf7d0' }}>
+                <div style={{ fontWeight: '800', color: '#166534', marginBottom: '0.4rem', fontSize: '0.85rem' }}>
+                  Risk Mitigation & Guarantee Parameters:
+                </div>
+                <ul style={{ margin: 0, paddingLeft: '1.2rem', fontSize: '0.82rem', color: '#15803d' }}>
+                  {stackedData.bankerDossier.riskMitigation.map((risk, rIdx) => (
+                    <li key={rIdx} style={{ marginBottom: '0.25rem' }}>{risk}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <p style={{ fontWeight: '700', color: '#0f393b', marginTop: '1rem' }}>
+                Recommended Action: {stackedData.bankerDossier.recommendedAction}
+              </p>
+            </div>
+
+            <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
+              <button 
+                type="button"
+                onClick={() => {
+                  window.print();
+                }}
+                style={{ padding: '0.55rem 1.25rem', borderRadius: '8px', background: '#0f393b', color: '#ffffff', border: 'none', fontWeight: '700', fontSize: '0.85rem', cursor: 'pointer' }}
+              >
+                Print / Save PDF Dossier
+              </button>
+              <button 
+                type="button"
+                onClick={() => setShowDossierModal(false)}
+                style={{ padding: '0.55rem 1rem', borderRadius: '8px', background: '#f1f5f9', color: '#334155', border: '1px solid #cbd5e1', fontWeight: '600', fontSize: '0.85rem', cursor: 'pointer' }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* 1. DIRECT MATCHES SECTION */}
       <div style={{ marginBottom: '2.5rem' }}>
         <div style={{ marginBottom: '1.25rem' }}>
@@ -99,6 +340,11 @@ export function SchemeMatchView({ matchEvaluation, profile, onSelectSchemeAndPro
               <div
                 key={scheme.id}
                 onClick={() => setSelectedSchemeId(scheme.id)}
+                onKeyDown={(e) => { if(e.key === 'Enter' || e.key === ' ') setSelectedSchemeId(scheme.id); }}
+                tabIndex={0}
+                role="button"
+                aria-pressed={isSelected}
+                aria-expanded={isExpanded}
                 style={{
                   border: isSelected ? '2px solid var(--brand-teal)' : '1px solid var(--glass-border)',
                   background: isSelected ? 'rgba(240, 253, 250, 0.95)' : 'rgba(255, 255, 255, 0.85)',
@@ -141,6 +387,7 @@ export function SchemeMatchView({ matchEvaluation, profile, onSelectSchemeAndPro
                       <span style={{ fontSize: '0.75rem', color: 'var(--slate-500)', fontWeight: '600' }}>
                         {scheme.ministry}
                       </span>
+                      <CitationFootnote citation={scheme.citation} />
                     </div>
 
                     <h3 style={{ fontSize: '1.25rem', fontWeight: '800', color: 'var(--brand-navy)', marginTop: '0.35rem' }}>
@@ -277,6 +524,8 @@ export function SchemeMatchView({ matchEvaluation, profile, onSelectSchemeAndPro
                     )}
                   </div>
                 )}
+
+                <FeedbackWidget schemeId={scheme.id} compact={true} lang={lang} />
               </div>
             );
           })}

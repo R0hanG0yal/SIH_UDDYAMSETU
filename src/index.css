@@ -628,6 +628,28 @@ body {
 
 
 /* ==========================================================================
+   PROTOTYPE DISCLAIMER BANNER
+   ========================================================================== */
+
+.prototype-disclaimer {
+  background: linear-gradient(90deg, #fef3c7, #fff7ed);
+  border: 1.5px solid #f59e0b;
+  color: #92400e;
+  padding: 0.55rem 1rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.prototype-disclaimer strong {
+  color: #78350f;
+}
+
+
+/* ==========================================================================
    CSC BANNER
    ========================================================================== */
 

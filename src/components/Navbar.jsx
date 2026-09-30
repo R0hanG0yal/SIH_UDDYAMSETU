@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Compass, ShieldCheck, QrCode, Sliders, HelpCircle, MapPin, Settings, X, Accessibility, Monitor, Globe, Bot, Sparkles } from 'lucide-react';
+import { Compass, ShieldCheck, QrCode, Sliders, HelpCircle, MapPin, Settings, X, Accessibility, Monitor, Globe, Bot, Sparkles, Share2 } from 'lucide-react';
+import { SUPPORTED_LANGUAGES } from '../data/i18n';
 
 export function Navbar({ activeTab, setActiveTab, lang = 'en', setLang, isCscMode, setIsCscMode, isHighContrast, setIsHighContrast, onOpenAiSahayak }) {
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -18,6 +19,7 @@ export function Navbar({ activeTab, setActiveTab, lang = 'en', setLang, isCscMod
 
   const navItems = [
     { id: 'journey', label: lang === 'hi' ? 'यात्रा' : 'Journey', fullLabel: lang === 'hi' ? 'नागरिक यात्रा' : 'Citizen Journey', icon: Compass },
+    { id: 'sih_core', label: 'SIH-26092', fullLabel: 'SIH-26092 MoSJE Core Modules', icon: Sparkles },
     { id: 'whatif', label: lang === 'hi' ? 'व्हाट-इफ' : 'What-If Lab', fullLabel: lang === 'hi' ? 'व्हाट-इफ लैब' : 'What-If Funding Lab', icon: Sliders },
     { id: 'pulse', label: lang === 'hi' ? 'पार्टनर' : 'Partners', fullLabel: lang === 'hi' ? 'पार्टनर पल्स' : 'Partner Pulse', icon: MapPin },
     { id: 'officer', label: lang === 'hi' ? 'QR स्कैन' : 'Officer', fullLabel: lang === 'hi' ? 'अधिकारी QR' : 'Officer Scan', icon: QrCode },
@@ -35,10 +37,10 @@ export function Navbar({ activeTab, setActiveTab, lang = 'en', setLang, isCscMod
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <span className="navbar-wordmark" style={{ letterSpacing: '-0.02em', fontWeight: 900 }}>
-              {lang === 'hi' ? 'उद्यमसेतु' : 'UdyamSetu'}
+              {lang === 'hi' ? 'सारथी' : 'SAARTHI'}
             </span>
             <span style={{ fontSize: '0.62rem', color: '#38bdf8', fontWeight: 600, letterSpacing: '0.04em', textTransform: 'uppercase', marginTop: '-2px' }}>
-              AI Funding Navigator
+              AI Scheme Navigator
             </span>
           </div>
         </div>
@@ -84,21 +86,32 @@ export function Navbar({ activeTab, setActiveTab, lang = 'en', setLang, isCscMod
         {/* Right: Language toggle (always visible) + Settings gear */}
         <div className="navbar-actions">
           {/* Compact language toggle — always visible */}
-          <div className="navbar-lang-toggle">
-            <button
-              onClick={() => setLang('en')}
-              id="lang-btn-en"
-              className={`navbar-lang-btn ${lang === 'en' ? 'active' : ''}`}
+          <div className="navbar-lang-toggle" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <Globe size={14} color="#94a3b8" />
+            <select
+              value={lang}
+              onChange={(e) => setLang(e.target.value)}
+              className="lang-selector-premium"
+              id="lang-selector"
+              style={{
+                background: 'rgba(255,255,255,0.08)',
+                border: '1.5px solid rgba(255,255,255,0.15)',
+                borderRadius: '8px',
+                color: '#e2e8f0',
+                fontSize: '0.75rem',
+                fontWeight: '700',
+                padding: '4px 8px',
+                cursor: 'pointer',
+                fontFamily: 'var(--font-sans)',
+                outline: 'none',
+              }}
             >
-              EN
-            </button>
-            <button
-              onClick={() => setLang('hi')}
-              id="lang-btn-hi"
-              className={`navbar-lang-btn ${lang === 'hi' ? 'active' : ''}`}
-            >
-              हिं
-            </button>
+              {SUPPORTED_LANGUAGES.map(l => (
+                <option key={l.code} value={l.code} style={{ background: '#0f3436', color: '#fff' }}>
+                  {l.nativeLabel}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Settings gear dropdown */}

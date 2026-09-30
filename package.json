@@ -6,6 +6,10 @@
   "scripts": {
     "dev": "vite",
     "server": "node server/index.js",
+    "ingest": "node server/ingest/runIngest.js",
+    "ingest:offline": "node server/ingest/runIngest.js --offline",
+    "geocode": "node server/ingest/geocodePartners.js",
+    "geocode:offline": "node server/ingest/geocodePartners.js --offline",
     "build": "vite build",
     "start": "node server/index.js",
     "render-build": "npm install && npm run build",
@@ -13,11 +17,12 @@
   },
   "dependencies": {
     "canvas-confetti": "^1.9.4",
-    "cors": "^2.8.6",
+    "cheerio": "^1.2.0",
     "express": "^5.2.1",
     "framer-motion": "^13.2.0",
+    "leaflet": "^1.9.4",
     "lucide-react": "^1.16.0",
-    "morgan": "^1.12.0",
+    "pdf-parse": "^2.4.5",
     "qrcode.react": "^4.2.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -25,7 +30,9 @@
     "vgpu": "^0.4.1"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
     "@vitejs/plugin-react": "^4.3.4",
+    "tailwindcss": "^4.3.3",
     "vite": "^6.2.0"
   }
 }

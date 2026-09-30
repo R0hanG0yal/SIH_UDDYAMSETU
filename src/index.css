@@ -1,4 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-obsidian-950: #f7faf8;
+  --color-obsidian-900: #ffffff;
+  --color-obsidian-850: #f3f7f4;
+  --color-obsidian-800: #eaf1ec;
+  --color-obsidian-700: #dce7df;
+  --color-obsidian-600: #c9d8ce;
+  --color-champagne: #197842;
+  --color-champagne-gold: #197842;
+  --color-champagne-light: #dcefe2;
+  --color-champagne-dim: rgba(25, 120, 66, 0.12);
+  --font-sans: "Noto Sans", "Noto Sans Devanagari", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-serif: "Noto Sans", "Noto Sans Devanagari", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: "Noto Sans", "Noto Sans Devanagari", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "Noto Sans", "Noto Sans Devanagari", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-syne: "Noto Sans", "Noto Sans Devanagari", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
 
 :root {
   /* Ultra-Premium Palette: Silicon Valley Liquid Glass meets Indian Sovereign Trust */
@@ -44,7 +62,7 @@
   --glass-specular: inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.8), 0 16px 36px -6px rgba(15, 23, 42, 0.07);
   --glass-specular-dark: inset 0 1px 1px 0 rgba(255, 255, 255, 0.22), 0 20px 40px -10px rgba(0, 0, 0, 0.5);
   
-  --font-sans: 'Plus Jakarta Sans', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: "Noto Sans", "Noto Sans Devanagari", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   
   --radius-xs: 6px;
   --radius-sm: 10px;
@@ -1390,4 +1408,304 @@ body.high-contrast {
   .app-footer-hide-mobile {
     display: none;
   }
+}
+
+/* =============================================================================
+ * GEO-SPATIAL MAP — Leaflet Overrides & Custom Styles
+ * ============================================================================= */
+
+/* Custom marker styling */
+.custom-map-marker {
+  background: none !important;
+  border: none !important;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.2));
+  transition: transform 0.2s ease;
+}
+
+.custom-map-marker:hover {
+  transform: scale(1.15);
+  z-index: 10000 !important;
+}
+
+.user-location-marker {
+  background: none !important;
+  border: none !important;
+  z-index: 9999 !important;
+}
+
+/* Saarthi popup styling */
+.saarthi-map-popup .leaflet-popup-content-wrapper {
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 14px;
+  border: 1.5px solid rgba(203, 213, 225, 0.5);
+  box-shadow: 0 12px 32px -4px rgba(15, 23, 42, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.06);
+  padding: 4px;
+}
+
+.saarthi-map-popup .leaflet-popup-tip {
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(203, 213, 225, 0.5);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+}
+
+.saarthi-map-popup .leaflet-popup-close-button {
+  color: #94a3b8;
+  font-size: 18px;
+  top: 6px;
+  right: 8px;
+}
+
+.saarthi-map-popup .leaflet-popup-close-button:hover {
+  color: #f43f5e;
+}
+
+/* Leaflet control overrides */
+.leaflet-control-zoom a {
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(203, 213, 225, 0.5) !important;
+  color: #091e20 !important;
+  font-weight: 700 !important;
+  border-radius: 10px !important;
+  width: 36px !important;
+  height: 36px !important;
+  line-height: 34px !important;
+  font-size: 18px !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background: rgba(249, 115, 22, 0.1) !important;
+  border-color: #f97316 !important;
+  color: #f97316 !important;
+}
+
+.leaflet-control-attribution {
+  font-size: 10px !important;
+  background: rgba(255, 255, 255, 0.7) !important;
+  border-radius: 6px !important;
+  padding: 2px 6px !important;
+}
+
+/* Spin animation for loading indicators */
+.spin-animation {
+  animation: spinAnimation 1.2s linear infinite;
+}
+
+@keyframes spinAnimation {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Pulse dot for partner status indicators */
+.pulse-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  position: relative;
+}
+
+.pulse-dot.green {
+  background: #10b981;
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5);
+  animation: pulseDot 2s infinite;
+}
+
+.pulse-dot.amber {
+  background: #f59e0b;
+}
+
+.pulse-dot.red {
+  background: #f43f5e;
+}
+
+.pulse-dot.grey {
+  background: #94a3b8;
+}
+
+@keyframes pulseDot {
+  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
+  70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+/* WhatsApp Share Button */
+.whatsapp-share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: #25D366;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.8rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-family: var(--font-sans);
+}
+
+.whatsapp-share-btn:hover {
+  background: #128C7E;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+}
+
+/* Language Selector Enhancement */
+.lang-selector-premium {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-full);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--font-sans);
+}
+
+.lang-selector-premium:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: var(--accent-saffron);
+}
+
+.lang-selector-premium option {
+  background: #0f3436;
+  color: #fff;
+  padding: 4px 8px;
+}
+
+/* PWA Install Banner */
+.pwa-install-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10000;
+  background: linear-gradient(135deg, rgba(15, 52, 54, 0.98), rgba(9, 30, 32, 0.98));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 2px solid var(--accent-saffron);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  animation: slideUp 0.4s ease;
+}
+
+.pwa-install-banner .pwa-text {
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.pwa-install-banner .pwa-text small {
+  display: block;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.72rem;
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Leaflet tile layer fixes for Vite */
+.leaflet-tile-pane {
+  z-index: 2 !important;
+}
+
+.leaflet-pane {
+  z-index: 3 !important;
+}
+
+.leaflet-top, .leaflet-bottom {
+  z-index: 4 !important;
+}
+
+/* Multi-language font support */
+[lang="ta"], .lang-ta { font-family: 'Noto Sans Tamil', var(--font-sans) !important; }
+[lang="te"], .lang-te { font-family: 'Noto Sans Telugu', var(--font-sans) !important; }
+[lang="bn"], .lang-bn { font-family: 'Noto Sans Bengali', var(--font-sans) !important; }
+[lang="hi"], .lang-hi { font-family: 'Noto Sans Devanagari', var(--font-sans) !important; }
+[lang="mr"], .lang-mr { font-family: 'Noto Sans Devanagari', var(--font-sans) !important; }
+
+/* =============================================================================
+ * SAARTHI — Animations & Styles
+ * ============================================================================= */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideLeft {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slideRight {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slideLeft {
+  animation: slideLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slideRight {
+  animation: slideRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ==========================================================================
+   ACCESSIBILITY & COMPLIANCE ADDITIONS
+   ========================================================================== */
+
+/* Visible keyboard focus everywhere (gov-portal requirement) */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid #f97316;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Respect users who turn off animations */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .liquid-orb, .hero-accent { animation: none !important; }
+}
+
+/* Minimum readable base size on small screens */
+@media (max-width: 640px) {
+  body { font-size: 15.5px; }
 }

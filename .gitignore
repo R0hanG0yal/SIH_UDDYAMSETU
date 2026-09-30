@@ -5,7 +5,12 @@ output/
 .saarthi-ppt-build/
 .saarthi-ppt-reference/
 server/data/db/*.db
+server/data/db/*.db-shm
+server/data/db/*.db-wal
+*.db-shm
+*.db-wal
 *.tmp
 *.tmp.*
 .DS_Store
 Thumbs.db
+

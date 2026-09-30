@@ -1,0 +1,3 @@
+# Localhost-only prototype. Do not index or publish until a public hostname is configured.
+User-agent: *
+Disallow: /

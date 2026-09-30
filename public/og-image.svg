@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="60%" stop-color="#f5faf6"/>
+      <stop offset="100%" stop-color="#eaf4ed"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#187842"/>
+      <stop offset="100%" stop-color="#71a47e"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="1050" cy="90" r="220" fill="#6b9f78" opacity="0.08"/>
+  <circle cx="120" cy="560" r="180" fill="#3e8c58" opacity="0.08"/>
+
+  <!-- Emblem -->
+  <g transform="translate(80,90)">
+    <rect width="110" height="110" rx="24" fill="#ffffff" stroke="#dce9df" stroke-width="3"/>
+    <circle cx="55" cy="50" r="28" fill="none" stroke="#187842" stroke-width="5"/>
+    <path d="M55 28 L66 52 L55 47 L44 52 Z" fill="#6ea77c"/>
+    <circle cx="55" cy="72" r="8" fill="#187842"/>
+  </g>
+  <text x="215" y="140" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#43704f">SMART INDIA HACKATHON 2026 · SIH26092</text>
+  <text x="80" y="300" font-family="Arial, sans-serif" font-size="92" font-weight="800" fill="#22332b">UdyamSetu</text>
+  <text x="82" y="360" font-family="Arial, sans-serif" font-size="34" font-weight="600" fill="#187842">Scheme discovery for entrepreneurs</text>
+  <rect x="82" y="400" width="560" height="6" rx="3" fill="url(#accent)"/>
+  <text x="82" y="470" font-family="Arial, sans-serif" font-size="26" fill="#53645a">Explore possible scheme matches · Understand what to check next</text>
+  <text x="82" y="508" font-family="Arial, sans-serif" font-size="26" fill="#53645a">An independent Smart India Hackathon student prototype</text>
+  <text x="82" y="575" font-family="Arial, sans-serif" font-size="20" fill="#637269">Not an official government service or myScheme portal.</text>
+</svg>

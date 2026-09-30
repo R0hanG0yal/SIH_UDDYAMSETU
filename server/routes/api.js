@@ -358,6 +358,19 @@ router.get('/health', (req, res) => {
   try {
     const countRow = db.prepare('SELECT COUNT(*) as count FROM passports').get();
     const evalCountRow = db.prepare('SELECT COUNT(*) as count FROM scheme_evaluations').get();
+
+    // v2 SIH dataset (separate pipeline: /api/v2) — degrade gracefully if the
+    // v2 tables have not been created yet.
+    let v2 = null;
+    try {
+      v2 = {
+        schemes: db.prepare('SELECT COUNT(*) AS c FROM schemes WHERE is_active = 1').get()?.c || 0,
+        channelPartners: db.prepare('SELECT COUNT(*) AS c FROM channel_partners WHERE is_active = 1').get()?.c || 0,
+        pendingPolicyReviews: db.prepare("SELECT COUNT(*) AS c FROM policy_reviews WHERE review_status = 'PENDING'").get()?.c || 0,
+        stagedScrapedPartners: db.prepare("SELECT COUNT(*) AS c FROM scraped_partners WHERE geocode_status != 'PROMOTED'").get()?.c || 0
+      };
+    } catch { /* v2 schema not bootstrapped */ }
+
     res.json({
       status: 'UP',
       system: 'UdyamSetu — AI Funding Navigator',
@@ -372,6 +385,7 @@ router.get('/health', (req, res) => {
       activePartnersCount: NATIONAL_PARTNERS.length,
       persistedPassportsCount: countRow?.count || 0,
       totalEvaluationsLogged: evalCountRow?.count || 0,
+      v2Dataset: v2,
       uptimeSeconds: process.uptime(),
     });
   } catch (err) {

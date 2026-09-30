@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="80" fill="#f4f8f5"/>
+  <circle cx="256" cy="256" r="190" stroke="#187842" stroke-width="12" fill="none" opacity="0.16"/>
+  <circle cx="256" cy="256" r="160" stroke="#187842" stroke-width="8" fill="none" opacity="0.12"/>
+  <!-- Saffron Compass/Star -->
+  <path d="M256 80 L290 200 L400 200 L310 270 L340 380 L256 310 L172 380 L202 270 L112 200 L222 200 Z" fill="#e5f1e8" opacity="0.9"/>
+  <!-- Center Circle -->
+  <circle cx="256" cy="240" r="50" fill="#ffffff" stroke="#187842" stroke-width="4"/>
+  <!-- UdyamSetu mark -->
+  <text x="256" y="252" text-anchor="middle" dominant-baseline="central" font-family="Arial,sans-serif" font-size="28" font-weight="900" fill="#187842" letter-spacing="1">उ</text>
+  <!-- Bottom Badge -->
+  <rect x="116" y="400" width="280" height="40" rx="20" fill="#187842"/>
+  <text x="256" y="425" text-anchor="middle" dominant-baseline="central" font-family="Arial,sans-serif" font-size="16" font-weight="800" fill="#ffffff" letter-spacing="1">UdyamSetu</text>
+</svg>

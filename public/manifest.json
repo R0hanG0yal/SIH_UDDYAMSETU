@@ -1,0 +1,25 @@
+{
+  "name": "UdyamSetu — Scheme Discovery Demo",
+  "short_name": "UdyamSetu",
+  "description": "Independent SIH 2026 student prototype for exploring possible government scheme matches.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#f7faf8",
+  "theme_color": "#187842",
+  "orientation": "portrait-primary",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["finance", "government", "business"],
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icons/icon-512x512.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [],
+  "related_applications": [],
+  "prefer_related_applications": false
+}

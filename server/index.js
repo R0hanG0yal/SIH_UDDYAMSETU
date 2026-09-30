@@ -12,10 +12,9 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 5001;
 const IS_PROD = process.env.NODE_ENV === 'production';
-const PUBLIC_ORIGIN = process.env.PUBLIC_ORIGIN;
 
-// Trust forwarded headers only when an explicit production origin is configured.
-app.set('trust proxy', IS_PROD && PUBLIC_ORIGIN ? 1 : false);
+// Trust reverse proxies (Render, Cloudflare, AWS, etc.) in production
+app.set('trust proxy', IS_PROD ? 1 : false);
 
 // Middleware
 app.use(express.json({ limit: '256kb' }));
@@ -32,12 +31,11 @@ app.use((req, res, next) => {
     'Content-Security-Policy',
     [
       "default-src 'self'",
-      "script-src 'self'",
-      "style-src 'self'",
-      "style-src-attr 'none'",
-      "font-src 'self' data:",
-      "img-src 'self' data:",
-      "connect-src 'self'",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "font-src 'self' data: https://fonts.gstatic.com",
+      "img-src 'self' data: https: blob:",
+      "connect-src 'self' https: wss:",
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",
@@ -48,24 +46,22 @@ app.use((req, res, next) => {
   next();
 });
 
-// --- Production serving requires a configured HTTPS origin; localhost stays HTTP. ---
+// --- Production HTTPS enforcement & HSTS ---
 app.use((req, res, next) => {
   if (!IS_PROD) return next();
-  let publicOrigin;
-  try {
-    publicOrigin = new URL(PUBLIC_ORIGIN || '');
-  } catch {
-    return res.status(503).send('HTTPS deployment is not configured for this prototype.');
+
+  // On Render and standard PaaS, TLS is terminated at the reverse proxy
+  const isHttps = req.secure || req.headers['x-forwarded-proto'] === 'https';
+
+  if (!isHttps) {
+    const host = req.headers['x-forwarded-host'] || req.get('host');
+    return res.redirect(308, `https://${host}${req.originalUrl}`);
   }
-  if (publicOrigin.protocol !== 'https:') {
-    return res.status(503).send('The configured public origin must use HTTPS.');
-  }
-  if (!req.secure) {
-    return res.redirect(308, publicOrigin.origin + req.originalUrl);
-  }
-  res.setHeader('Strict-Transport-Security', 'max-age=31536000');
+
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
   next();
 });
+
 
 // --- Simple in-memory rate limiter for write endpoints (spam protection) ----
 const rateBuckets = new Map();
@@ -141,11 +137,9 @@ app.use('/api', (req, res) => {
 const distPath = path.join(__dirname, '..', 'dist');
 app.use(express.static(distPath));
 
-// SPA fallback: any remaining non-API route gets the app shell with a 404
-// status — the React router (App.jsx) renders the friendly "page not found"
-// screen inside it, matching gov-portal behavior.
+// SPA fallback: any remaining non-API route gets the app shell
 app.get('{*path}', (req, res) => {
-  res.status(404).sendFile(path.join(distPath, 'index.html'), (err) => {
+  res.sendFile(path.join(distPath, 'index.html'), (err) => {
     if (err) res.status(404).send('Page not found. <a href="/">Go to the home page</a>.');
   });
 });
